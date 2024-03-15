@@ -20,6 +20,8 @@ const createAndSendToken = (
 		expires: new Date(
 			Date.now() + Number(process.env.JWT_COOKIE_EXPIRES_IN) * 24 * 3600 * 1000
 		),
+		secure: true,
+		signed: true,
 	};
 	//TODO in production cookie should be secured
 	// if (process.env.NODE_ENV == "production") cookieOptions.secure = true;
