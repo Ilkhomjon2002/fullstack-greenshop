@@ -2,6 +2,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "../shadcn/ui/button";
+
 import {
 	Form,
 	FormField,
@@ -46,7 +47,15 @@ export const LoginForm = ({
 		console.log("form changed");
 		setFormType("register");
 	}
+	function googleLogin() {
+		window.location.href = "http://localhost:8080/v1/auth/login/google";
 
+		// store.loginWithGoogle();
+	}
+	function facebookLogin() {
+		window.location.href = "http://localhost:8080/v1/auth/login/facebook";
+		// store.loginWithFacebook();
+	}
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		// Do something with the form values.
 		// ✅ This will be type-safe and validated.
@@ -110,11 +119,13 @@ export const LoginForm = ({
 					iconSrc={GoogleIcon}
 					variant={"outline"}
 					title="Login with Google"
+					onClick={googleLogin}
 				></ButtonWithIcon>
 				<ButtonWithIcon
 					className="text-zinc-700"
 					iconSrc={FacebookIcon}
 					variant={"outline"}
+					onClick={facebookLogin}
 					title="Login with Facebook"
 				></ButtonWithIcon>
 			</div>
