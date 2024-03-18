@@ -23,8 +23,6 @@ const createAndSendToken = (
 		secure: true,
 		signed: true,
 	};
-	//TODO in production cookie should be secured
-	// if (process.env.NODE_ENV == "production") cookieOptions.secure = true;
 	res.cookie("token", token, cookieOptions);
 	user.password = undefined;
 	user.passwordConfirm = undefined;

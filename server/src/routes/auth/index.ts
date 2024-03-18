@@ -3,9 +3,16 @@ import {
 	loginController,
 	registerController,
 } from "../../controllers/authController";
+import {
+	facebookLoginController,
+	loginWithGoogleController,
+} from "../../controllers/oauthController";
+
 const router: Router = express.Router();
 
 router.post("/login", loginController);
 router.post("/register", registerController);
 
+router.get("/login/google", loginWithGoogleController);
+router.get("/login/facebook", facebookLoginController);
 export default router;
