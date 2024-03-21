@@ -3,6 +3,7 @@ import catchAsync from "../utils/catchAsync";
 import User, { IUser } from "../models/userModel";
 import jwt from "../services/jwt";
 import AppError from "../utils/appError";
+import { sendEmail } from "../utils/email";
 const createAndSendToken = (
 	user: IUser,
 	statusCode: 200 | 201,
@@ -29,6 +30,25 @@ const createAndSendToken = (
 
 	res.status(statusCode).json({ status: "success", token, data: { user } });
 };
+const verifyEmail = catchAsync(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const { email } = req.body;
+		const user = await User.findOne({ email });
+
+		if (!user) {
+			return next(new AppError("There is no user with this email!", 404));
+		}
+		const emailVerificationCode = await user.createVerificationToken();
+		sendEmail({
+			email: "smax18760@gmail.com",
+			subject: "Verification code for email",
+			text: emailVerificationCode,
+		});
+
+		console.log(user);
+		res.send(emailVerificationCode);
+	}
+);
 
 //** -------------Controllers---------------- */
 //** Login controller triggered by /v1/auth/login
@@ -65,4 +85,4 @@ const registerController = catchAsync(
 	}
 );
 
-export { loginController, registerController };
+export { loginController, registerController, verifyEmail };
