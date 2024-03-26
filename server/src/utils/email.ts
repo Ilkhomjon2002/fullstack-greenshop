@@ -17,7 +17,7 @@ const sendEmail = async (options: {
 		});
 
 		const mailOptions = {
-			from: "Greenshop <ilhommaxsudov3@gmail.com>",
+			from: "Greenshop <hello@greenshop.ilkhomjonmakhsudov.uz>",
 			to: options.email,
 			subject: options.subject,
 			text: options.text,

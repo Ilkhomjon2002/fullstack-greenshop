@@ -17,6 +17,7 @@ import { ButtonWithIcon } from "../atoms/ButtonWithIcon";
 import GoogleIcon from "@/public/icons/googleIcon.svg";
 import FacebookIcon from "@/public/icons/facebookIcon.svg";
 import { IUserStore, useUserStore } from "@/store/user";
+import { useToastStore } from "@/store/alert";
 const formSchema = z.object({
 	username: z.string({
 		required_error: "Username is required",
@@ -34,7 +35,11 @@ const formSchema = z.object({
 	}),
 });
 
-export const RegisterForm = (props: { setFormType: (type: any) => void }) => {
+export const RegisterForm = (props: {
+	setFormType: (type: any) => void;
+	closeForm: () => void;
+}) => {
+	const toastStore = useToastStore();
 	const store = useUserStore((state) => state as IUserStore);
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -51,13 +56,17 @@ export const RegisterForm = (props: { setFormType: (type: any) => void }) => {
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		// Do something with the form values.
 		// ✅ This will be type-safe and validated.
-		store.register({
-			username: values.username,
-			email: values.email,
-			password: values.password,
-			passwordConfirm: values.confirmPassword,
-		});
-		console.log(values);
+		store
+			.register({
+				username: values.username,
+				email: values.email,
+				password: values.password,
+				passwordConfirm: values.confirmPassword,
+			})
+			.then(() => {
+				toastStore.addToast("SUCCESS", "Login", "Successfully registered!");
+				props.closeForm();
+			});
 	}
 	return (
 		<div className="w-[300px] my-0 mx-auto">

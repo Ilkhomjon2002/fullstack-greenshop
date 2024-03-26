@@ -9,7 +9,7 @@ export interface IRoute {
 const routes: IRoute[] = [
 	{
 		id: 0,
-		path: "",
+		path: "/",
 		component: null,
 		title: "",
 		navLink: true,

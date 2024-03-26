@@ -1,24 +1,33 @@
-import { useToastStore } from "@/store/alert";
-
+import { toast } from "@/components/shadcn/ui/use-toast";
 export default (err: any) => {
-	const alertStore = useToastStore();
+	const toastHandler = (title: string, description: string) => {
+		toast({
+			variant: "destructive",
+			title,
+			description,
+		});
+	};
+
 	return new Promise((_, reject) => {
 		switch (err.status) {
+			case "401-1":
+				toastHandler("Login Error", err.error);
+				break;
 			case 400:
-				alertStore.addToast("ERROR", "Something went wrong", err.message);
+				toastHandler("Something went wrong", err.error);
 				break;
 			case 401:
-				alertStore.addToast("ERROR", "Unauthorized request", err.message);
+				toastHandler("Unauthorized request", err.error);
 				break;
 			case 404:
-				alertStore.addToast("ERROR", "Not found", err.message);
+				toastHandler("Not found", err.error);
 				break;
 		}
 		if (err.status >= 500) {
-			alertStore.addToast("ERROR", "Server error", err.message);
+			toastHandler("Server error", err.error);
 		}
 		if (err.status == "CONERROR") {
-			alertStore.addToast("ERROR", "Connection error", err.message);
+			toastHandler("Connection error", err.error);
 		}
 		reject(err);
 	});

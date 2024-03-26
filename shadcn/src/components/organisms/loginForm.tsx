@@ -19,6 +19,8 @@ import GoogleIcon from "@/public/icons/googleIcon.svg";
 import FacebookIcon from "@/public/icons/facebookIcon.svg";
 import { useStore } from "zustand";
 import { IUserStore, useUserStore } from "@/store/user";
+import { useToastStore } from "@/store/alert";
+import { title } from "process";
 const formSchema = z.object({
 	email: z
 		.string({
@@ -32,9 +34,12 @@ const formSchema = z.object({
 
 export const LoginForm = ({
 	setFormType,
+	closeForm,
 }: {
 	setFormType: (type: any) => void;
+	closeForm: () => void;
 }) => {
+	const toastStore = useToastStore();
 	const store = useUserStore((state) => state as IUserStore);
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -49,17 +54,17 @@ export const LoginForm = ({
 	}
 	function googleLogin() {
 		window.location.href = "http://localhost:8080/v1/auth/login/google";
-
-		// store.loginWithGoogle();
 	}
 	function facebookLogin() {
 		window.location.href = "http://localhost:8080/v1/auth/login/facebook";
-		// store.loginWithFacebook();
 	}
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		// Do something with the form values.
 		// ✅ This will be type-safe and validated.
-		store.login({ email: values.email, password: values.password });
+		store.login({ email: values.email, password: values.password }).then(() => {
+			toastStore.addToast("SUCCESS", "Login", "Successfully logged in!");
+			closeForm();
+		});
 		console.log(values);
 	}
 	return (

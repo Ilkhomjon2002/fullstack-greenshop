@@ -1,9 +1,13 @@
 import { Request, Response, NextFunction, CookieOptions } from "express";
 import catchAsync from "../utils/catchAsync";
 import User, { IUser } from "../models/userModel";
+import UserNotVerified, {
+	INotVerifiedUser,
+} from "../models/unVerifiedUserModel";
 import jwt from "../services/jwt";
 import AppError from "../utils/appError";
 import { sendEmail } from "../utils/email";
+import unVerifiedUserModel from "../models/unVerifiedUserModel";
 const createAndSendToken = (
 	user: IUser,
 	statusCode: 200 | 201,
@@ -75,13 +79,14 @@ const registerController = catchAsync(
 	async (req: Request, res: Response, next: NextFunction) => {
 		const { email, username, password, passwordConfirm } = req.body;
 
-		const user = await User.create({
+		const user = await unVerifiedUserModel.create({
 			email,
 			username,
 			password,
 			passwordConfirm,
 		});
-		createAndSendToken(user, 201, res);
+		// createAndSendToken(user, 201, res);
+		res.send(user);
 	}
 );
 
