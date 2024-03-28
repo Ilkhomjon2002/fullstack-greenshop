@@ -1,3 +1,6 @@
 .dropdown_item {
 	@apply flex gap-1 hover:before:w-[5px] pl-6 before:w-[0px] before:ease-out before:duration-200 cursor-pointer before:h-full  before:absolute before:bg-primary before:inset-0 ease-out hover:text-primary hover:bg-white;
 }
+.dropdown_item_active {
+	@apply before:w-[5px] bg-white;
+}

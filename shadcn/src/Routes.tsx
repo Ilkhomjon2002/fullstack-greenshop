@@ -8,11 +8,17 @@ export default () => {
 			<Route element={<FullLayout></FullLayout>}>
 				{routes.map((route: IRoute) => {
 					return (
-						<Route
-							path={route.path}
-							key={route.id}
-							element={route.component}
-						></Route>
+						<Route path={route.path} key={route.id} element={route.component}>
+							{route.children?.map((child) => {
+								return (
+									<Route
+										path={`${route.path}/${child.path}`}
+										key={child.id}
+										element={child.component}
+									></Route>
+								);
+							})}
+						</Route>
 					);
 				})}
 			</Route>

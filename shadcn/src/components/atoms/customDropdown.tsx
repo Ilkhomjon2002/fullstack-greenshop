@@ -30,13 +30,16 @@ const DropdownContent = ({ children, className }: IDropdownContent) => {
 const DropdownItem = ({ children, className, to, action }: IDropdownItem) => {
 	return (
 		<>
-			{to == null ? (
+			{to != null ? (
 				<NavLink
-					to={String(to)}
-					className={cn(
-						"relative flex   select-none items-center rounded-sm  py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-						className
-					)}
+					to={String(`${to}`)}
+					className={({ isActive }) => {
+						return cn(
+							"relative flex   select-none items-center rounded-sm  py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+							className,
+							isActive && "dropdown_item_active"
+						);
+					}}
 				>
 					{children}
 				</NavLink>
@@ -58,8 +61,8 @@ interface ICustomDropdownItem {
 	icon?: ReactElement;
 	className?: string;
 	title: string;
-	to?: string;
-	action: () => void;
+	to?: string | null;
+	action?: () => void;
 }
 interface ICustomDropdown {
 	title: string;
@@ -78,7 +81,7 @@ export const CustomDropDown = ({ title, items }: ICustomDropdown) => {
 							<DropdownItem
 								to={String(item.to)}
 								key={item.title}
-								action={item.action}
+								action={item.action ? item.action : () => {}}
 								className={cn("dropdown_item gap-2 py-3", item?.className)}
 							>
 								{React.createElement(() => item.icon)}

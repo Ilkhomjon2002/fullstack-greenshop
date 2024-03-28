@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { Navbar } from "@/components/layouts/navbar";
+import { Navbar } from "@/components/organisms/navbar";
 import { Toaster } from "@/components/shadcn/ui/toaster";
 const FullLayout: React.FC = () => {
 	return (
