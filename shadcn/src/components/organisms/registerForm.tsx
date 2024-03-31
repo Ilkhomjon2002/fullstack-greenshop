@@ -16,7 +16,7 @@ import { InputWithIconPassword } from "../atoms/InputWithIcon";
 import { ButtonWithIcon } from "../atoms/ButtonWithIcon";
 import GoogleIcon from "@/public/icons/googleIcon.svg";
 import FacebookIcon from "@/public/icons/facebookIcon.svg";
-import { IUserStore, useUserStore } from "@/store/user";
+import { IAuthStore, useAuthStore } from "@/store/auth";
 import { useToastStore } from "@/store/alert";
 const formSchema = z.object({
 	username: z.string({
@@ -40,7 +40,7 @@ export const RegisterForm = (props: {
 	closeForm: () => void;
 }) => {
 	const toastStore = useToastStore();
-	const store = useUserStore((state) => state as IUserStore);
+	const store = useAuthStore((state) => state as IAuthStore);
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {

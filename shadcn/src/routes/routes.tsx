@@ -1,4 +1,5 @@
 import AccountDetails from "@/components/organisms/accountDetails";
+import AddressDetails from "@/components/organisms/addressDetails";
 import { LoginForm } from "@/components/organisms/loginForm";
 import ProfilePage from "@/components/pages/profile";
 import { ReactNode } from "react";
@@ -65,8 +66,8 @@ export const routes: IRoute[] = [
 			{
 				id: "4-2",
 				path: "/address",
-				component: <></>,
-				title: "Account Detail",
+				component: <AddressDetails></AddressDetails>,
+				title: "Address Detail",
 				navLink: false,
 			},
 			{

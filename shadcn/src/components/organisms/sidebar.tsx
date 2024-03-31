@@ -9,10 +9,10 @@ import {
 	User,
 } from "lucide-react";
 import { CustomDropDown } from "../atoms/customDropdown";
-import { IUserStore, useUserStore } from "@/store/user";
+import { IAuthStore, useAuthStore } from "@/store/auth";
 
 export const Sidebar = () => {
-	const userStore = useUserStore((state) => state as IUserStore);
+	const userStore = useAuthStore((state) => state as IAuthStore);
 	const sidebarItems = [
 		{ to: "detail", title: "Account Details", icon: <User width={"18px"} /> },
 		{ to: "address", title: "Address", icon: <User width={"18px"} /> },

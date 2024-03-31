@@ -11,13 +11,13 @@ import { CustomDialog } from "./dialog";
 import { LoginForm } from "./loginForm";
 import { useState } from "react";
 import { RegisterForm } from "./registerForm";
-import { IUserStore, useUserStore } from "@/store/user";
+import { IAuthStore, useAuthStore } from "@/store/auth";
 import { AvatarComp } from "../atoms/avatar";
 import { DropdownMenuComp } from "../atoms/dropDownMenu";
 export const Navbar: React.FC = () => {
 	const [formType, setFormType] = useState("login");
 	const [openLogin, setOpenLogin] = useState(false);
-	const userStore = useUserStore((state) => state as IUserStore);
+	const userStore = useAuthStore((state) => state as IAuthStore);
 	const changeForm = (type: "login" | "register") => {
 		console.log(type);
 		setFormType(type);

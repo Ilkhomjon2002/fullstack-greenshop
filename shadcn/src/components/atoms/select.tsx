@@ -38,7 +38,11 @@ export const SelectCustom = ({
 			</SelectTrigger>
 			<SelectContent>
 				{items.map((item: IItem) => {
-					return <SelectItem value={item.value}>{item.title}</SelectItem>;
+					return (
+						<SelectItem key={item.value} value={item.value}>
+							{item.title}
+						</SelectItem>
+					);
 				})}
 			</SelectContent>
 		</Select>

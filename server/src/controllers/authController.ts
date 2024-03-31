@@ -13,6 +13,7 @@ const createAndSendToken = (
 	statusCode: 200 | 201,
 	res: Response
 ) => {
+	console.log("CREATE AND SEND TOKEN");
 	const tokenPayload = {
 		username: user.username,
 		email: user.email,
@@ -31,6 +32,7 @@ const createAndSendToken = (
 	res.cookie("token", token, cookieOptions);
 	user.password = undefined;
 	user.passwordConfirm = undefined;
+	console.log(res);
 
 	res.status(statusCode).json({ status: "success", token, data: { user } });
 };
@@ -64,6 +66,7 @@ const loginController = catchAsync(
 		}
 
 		const user = await User.findOne({ email }).select("+password");
+		console.log(user);
 
 		if (
 			user &&

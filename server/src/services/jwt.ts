@@ -17,5 +17,19 @@ export default {
 			return err;
 		}
 	},
-	verify: () => {},
+	verify: async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			console.log(req.cookies.token);
+			const decoded = jwt.verify(
+				String(req.cookies.token),
+				String(process.env.JWT_TOKEN)
+			);
+			req.body.user = decoded;
+			console.log(decoded);
+			next();
+		} catch (err: any) {
+			console.log(err);
+			return res.status(401).json({ message: err?.message });
+		}
+	},
 };

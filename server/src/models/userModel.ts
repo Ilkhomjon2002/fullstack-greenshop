@@ -2,15 +2,22 @@ import mongoose, { Schema, Types } from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import { IBillingAddress } from "./billingAddressModel";
 
 export interface IUser extends Types.ObjectId {
 	email: string;
 	username: string;
 	password?: string;
 	passwordConfirm?: string;
+	phoneNumber?: string;
+	firstName?: string;
+	lastName?: string;
+	avatarUrl?: string;
 	active?: boolean;
 	verificationExpireDate?: string;
 	verificationToken?: string;
+	billingAddress?: IBillingAddress[];
+
 	correctPassword(
 		candidatePassword: string,
 		userPassword: string
@@ -21,7 +28,7 @@ export interface IUser extends Types.ObjectId {
 const userSchema = new Schema<IUser>({
 	email: {
 		type: String,
-		require: [true, "Email is required!"],
+		required: [true, "Email is required!"],
 		unique: true,
 		trim: true,
 		lowercase: true,
@@ -30,6 +37,23 @@ const userSchema = new Schema<IUser>({
 	username: {
 		type: String,
 		required: [true, "Username is required!"],
+		trim: true,
+	},
+	phoneNumber: {
+		type: String,
+		trim: true,
+		default: "",
+	},
+	firstName: {
+		type: String,
+		trim: true,
+	},
+	lastName: {
+		type: String,
+		trim: true,
+	},
+	avatarUrl: {
+		type: String,
 		trim: true,
 	},
 	password: {
@@ -65,6 +89,7 @@ const userSchema = new Schema<IUser>({
 		default: true,
 		select: false,
 	},
+	billingAddress: [{ type: Schema.ObjectId, ref: "billingAddress" }],
 });
 
 userSchema.pre("save", async function (next) {

@@ -89,7 +89,9 @@ export const CustomDropDown = ({ title, items }: ICustomDropdown) => {
 							</DropdownItem>
 						);
 					} else {
-						return <Separator className="bg-primary/50"></Separator>;
+						return (
+							<Separator key={item.title} className="bg-primary/50"></Separator>
+						);
 					}
 				})}
 			</DropdownContent>
