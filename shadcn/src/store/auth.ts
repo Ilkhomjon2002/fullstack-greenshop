@@ -3,6 +3,7 @@ import http from "@/http/http";
 import errorHandler from "@/utils/errorHandler";
 import { toast } from "@/components/shadcn/ui/use-toast";
 import { AxiosResponse } from "axios";
+import storage from "@/utils/localStorage";
 interface IUser {
 	_id: string;
 	email: string;
@@ -34,23 +35,20 @@ interface IResponse<T> {
 
 export const useAuthStore = create(
 	(set): IAuthStore => ({
-		user: JSON.parse(String(localStorage.getItem("user")))?.user || null,
-		token: JSON.parse(String(localStorage.getItem("user")))?.token || null,
-		isLoggedIn:
-			JSON.parse(String(localStorage.getItem("user")))?.isLoggedIn || null,
+		user: JSON.parse(String(localStorage.getItem("user"))) || null,
+		token: JSON.parse(String(localStorage.getItem("token"))) || null,
+		isLoggedIn: JSON.parse(String(localStorage.getItem("isLoggedIn"))) || null,
 		login: async (params: ILoginParams) => {
 			await http
 				.post("/auth/login", params)
 				.then((res: AxiosResponse<IResponse<IUser>>) => {
 					console.log(res);
-					localStorage.setItem(
-						"user",
-						JSON.stringify({
-							isLoggedIn: true,
-							token: res.data.token,
-							user: res.data.data.user,
-						})
-					);
+					storage.setItems([
+						{ key: "user", value: res.data.data.user },
+						{ key: "token", value: res.data.token },
+						{ key: "isLoggedIn", value: true },
+					]);
+
 					set({
 						isLoggedIn: true,
 						token: res.data.token,
@@ -71,19 +69,21 @@ export const useAuthStore = create(
 				.post("/auth/register", params)
 				.then((res: AxiosResponse<IResponse<IUser>>) => {
 					console.log(res);
-					localStorage.setItem(
-						"user",
-						JSON.stringify({
-							isLoggedIn: true,
-							token: res.data.token,
-							user: res.data.data.user,
-						})
-					);
-					set({
-						isLoggedIn: true,
-						token: res.data.token,
-						user: res.data.data.user,
-					});
+
+					// storage.setItems([{ user: res.data }]);
+					// localStorage.setItem(
+					// 	"user",
+					// 	JSON.stringify({
+					// 		isLoggedIn: true,
+					// 		token: res.data.token,
+					// 		user: res.data.,
+					// 	})
+					// );
+					// set({
+					// 	isLoggedIn: true,
+					// 	token: res.data.token,
+					// 	user: res.data,
+					// });
 				})
 				.catch((error) => {
 					console.log(error);

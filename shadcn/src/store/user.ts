@@ -42,12 +42,17 @@ export interface IUserAddress {
 export interface IUserStore {
 	user: IUser | null;
 	billingAddress: IUserAddress | null;
+	billingAddresses: IUserAddress[];
 	isLoading: boolean;
 	updateUser: (data: IUserUpdateParams) => Promise<any>;
-	updateAddress: (data: any, userId: any) => Promise<any>;
+	putBillingAddress: (data: any, userId: any) => Promise<any>;
 	getUser: (_id: string) => Promise<IUser | unknown>;
 	deleteUser: (_id: string) => Promise<void>;
 	getBillingAddress: (_id: string, userId: string) => Promise<any>;
+	postBillingAddress: (data: any, userId: string) => Promise<any>;
+	deleteBillingAddress: (data: any, userId: string) => Promise<any>;
+	getBillingAddresses: (userId: string, signal?: any) => Promise<any>;
+	updateBillingAddressSync: (billingAddresses: IUserAddress[]) => void;
 }
 
 interface IResponse<T> {
@@ -56,8 +61,9 @@ interface IResponse<T> {
 
 export const useUserStore = create(
 	(set): IUserStore => ({
-		user: null,
+		user: JSON.parse(String(localStorage.getItem("user"))) || null,
 		billingAddress: null,
+		billingAddresses: [],
 		isLoading: false,
 		updateUser: async (data: IUserUpdateParams) => {
 			const { _id, ...rest } = data;
@@ -99,11 +105,22 @@ export const useUserStore = create(
 				}
 			);
 		},
-		updateAddress: async (data: IUserAddress, userId: string) => {
+		putBillingAddress: async (data: IUserAddress, userId: string) => {
 			const { _id, ...rest } = data;
 			return await http.put(`/user/${userId}/address/${_id}`, rest).then(
 				(res: AxiosResponse<{ message: string; status: string }>) => {
 					return res.data.message;
+				},
+				(err: any) => {
+					return errorHandler({ ...err });
+				}
+			);
+		},
+		postBillingAddress: async (data: IUserAddress, userId: string) => {
+			const { _id, ...rest } = data;
+			return await http.post(`/user/${userId}/address`, rest).then(
+				(res: AxiosResponse<{ message: string; status: string }>) => {
+					return res.data;
 				},
 				(err: any) => {
 					return errorHandler({ ...err });
@@ -128,6 +145,41 @@ export const useUserStore = create(
 					return errorHandler({ ...err });
 				}
 			);
+		},
+		deleteBillingAddress: async (_id: string, userId: string) => {
+			return await http.delete(`/user/${userId}/address/${_id}`).then(
+				(res: AxiosResponse<{ message: string; status: string }>) => {
+					return res.data.message;
+				},
+				(err: any) => {
+					return errorHandler({ ...err });
+				}
+			);
+		},
+		getBillingAddresses: async (userId: string, signal?: AbortSignal) => {
+			return await http
+				.get(`/user/${userId}/address`, { signal: signal ? signal : undefined })
+				.then(
+					(res: AxiosResponse<IResponse<IUserAddress>>) => {
+						set({
+							isLoading: false,
+							billingAddresses: res.data.data,
+						});
+						return res.data.data;
+					},
+					(err: any) => {
+						set({
+							isLoading: false,
+							billingAddresses: [],
+						});
+						console.log(err);
+						return errorHandler({ ...err });
+					}
+				);
+		},
+		updateBillingAddressSync: (billingAddresses: IUserAddress[]) => {
+			console.log(billingAddresses);
+			set({ billingAddresses });
 		},
 	})
 );

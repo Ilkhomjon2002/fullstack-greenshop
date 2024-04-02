@@ -1,5 +1,5 @@
-import AccountDetails from "@/components/organisms/accountDetails";
-import AddressDetails from "@/components/organisms/addressDetails";
+import AccountDetails from "@/components/pages/accountDetails";
+import AddressDetails from "@/components/pages/addressDetails";
 import { LoginForm } from "@/components/organisms/loginForm";
 import ProfilePage from "@/components/pages/profile";
 import { ReactNode } from "react";
